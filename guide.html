@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Как слушать интернет-радио — гид для новичков | Iron Wave Radio</title>
+  <meta name="description" content="Как работает интернет-радио, что такое битрейт и буферизация, как слушать без VPN в СНГ, что делать если поток не играет, и как получить лучший звук.">
+  <link rel="canonical" href="/guide.html">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23111'/%3E%3Cpath d='M6 8 L6 24 L10 24 L10 17 L16 17 L16 24 L20 24 L20 8 L16 8 L16 14 L10 14 L10 8 Z' fill='%23e63946'/%3E%3Cpath d='M22 8 L22 24 L26 24 L26 8 Z' fill='%23e63946'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/fonts.css">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<a href="#main" class="btn btn-primary" style="position:absolute;top:-60px;left:var(--space-2);z-index:9999;" onfocus="this.style.top='var(--space-2)'" onblur="this.style.top='-60px'">Перейти к содержимому</a>
+
+<div id="cookie-banner" role="dialog" aria-label="Уведомление о cookies">
+  <p>Мы используем только строго необходимые технические данные, хранящиеся локально в браузере. Трекеров и рекламы нет. Подробнее — в <a href="about.html#privacy">Политике конфиденциальности</a>.</p>
+  <div class="cookie-btns">
+    <button class="btn btn-primary" onclick="acceptCookies()">Принять</button>
+    <button class="btn btn-outline" onclick="closeCookieBanner()">Только необходимые</button>
+  </div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo" aria-label="IRON WAVE RADIO — на главную">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+        <path d="M18 3 L30 10 L30 26 L18 33 L6 26 L6 10 Z" fill="currentColor" opacity="0.15"/>
+        <path d="M18 3 L30 10 L30 26 L18 33 L6 26 L6 10 Z" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M14 8 L22 8 L16 19 L21 19 L12 30 L15 20 L10 20 Z" fill="currentColor"/>
+      </svg>
+      <div><span class="logo-text">Iron Wave</span><span class="logo-sub">Hard Rock Radio</span></div>
+    </a>
+    <nav class="main-nav" aria-label="Основная навигация">
+      <a href="index.html">Главная</a>
+      <a href="history.html">История</a>
+      <a href="artists.html">Артисты</a>
+      <a href="subgenres.html">Поджанры</a>
+      <a href="guide.html" aria-current="page">Как слушать</a>
+      <a href="about.html">О нас</a>
+    </nav>
+    <div class="header-actions">
+      <button id="theme-toggle" aria-label="Переключить тему"></button>
+      <button class="hamburger" id="hamburger" aria-label="Меню" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<nav class="mobile-menu hidden" id="mobile-menu" aria-label="Мобильное меню">
+  <a href="index.html">🏠 Главная</a>
+  <a href="history.html">📖 История</a>
+  <a href="artists.html">🎸 Артисты</a>
+  <a href="subgenres.html">🎚️ Поджанры</a>
+  <a href="guide.html">🎧 Как слушать</a>
+  <a href="about.html">⚡ О нас</a>
+</nav>
+
+<div class="player-bar" role="region" aria-label="Плеер">
+  <div class="player-inner">
+    <div class="station-info">
+      <div class="vinyl-icon" id="vinyl" aria-hidden="true"></div>
+      <div>
+        <div class="station-name" id="current-station-name">Rock Antenne</div>
+        <div class="now-playing">В эфире: <span id="now-track">Нажми PLAY для начала</span></div>
+      </div>
+    </div>
+    <div class="player-controls">
+      <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+      <label class="sr-only" for="station-select">Выбор станции</label>
+      <select id="station-select" class="station-select" aria-label="Выбор станции"></select>
+      <button class="play-btn" id="play-btn" onclick="togglePlay()" aria-label="Воспроизвести / Остановить">
+        <svg id="play-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+      </button>
+      <div class="volume-wrap" aria-label="Громкость">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+        <input type="range" id="volume" min="0" max="1" step="0.05" value="0.8" aria-label="Громкость">
+      </div>
+    </div>
+  </div>
+</div>
+<audio id="radio-player" preload="none"></audio>
+
+<main id="main">
+  <section class="page-hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Главная</a><span>/</span>Как слушать</div>
+      <h1 class="page-title">Как слушать <em>интернет-радио</em></h1>
+      <p class="page-intro">Короткий и понятный гид: как устроен онлайн-поток, почему наши станции работают в СНГ без VPN, что делать при сбоях и как получить максимальное качество звука.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <article class="prose">
+        <nav class="toc" aria-label="Содержание">
+          <h2>Содержание</h2>
+          <ol>
+            <li><a href="#how">Как работает интернет-радио</a></li>
+            <li><a href="#start">Как начать слушать</a></li>
+            <li><a href="#cis">Доступ из СНГ без VPN</a></li>
+            <li><a href="#quality">Битрейт и качество звука</a></li>
+            <li><a href="#trouble">Если поток не играет</a></li>
+            <li><a href="#tips">Советы для лучшего звучания</a></li>
+          </ol>
+        </nav>
+
+        <h2 id="how">Как работает интернет-радио</h2>
+        <p>В отличие от обычного аудиофайла, который скачивается целиком, <strong>радиопоток (stream)</strong> передаётся непрерывно. Сервер вещателя постоянно отдаёт небольшие порции звука, а ваш браузер воспроизводит их по мере поступления, держа небольшой запас в <strong>буфере</strong> на случай рывков сети. Поэтому радио нельзя «перемотать» — вы всегда слушаете то, что идёт в эфире прямо сейчас, одновременно с тысячами других людей.</p>
+        <p>Наш плеер использует стандартный HTML5-элемент <code>&lt;audio&gt;</code> — никаких плагинов и сторонних проигрывателей не нужно. Поток подключается напрямую от сервера вещателя к вашему браузеру по защищённому протоколу <strong>HTTPS</strong>.</p>
+
+        <h2 id="start">Как начать слушать</h2>
+        <ol>
+          <li>Нажмите большую круглую кнопку <strong>PLAY</strong> в плеере вверху любой страницы.</li>
+          <li>Выберите станцию из выпадающего списка или кликните карточку на <a href="index.html#streams">главной странице</a>.</li>
+          <li>Отрегулируйте громкость ползунком (на мобильных регулируйте громкость устройства).</li>
+          <li>Можно свободно переходить между разделами сайта — плеер останется доступным на каждой странице.</li>
+        </ol>
+        <div class="callout"><h3>Важно</h3><p>Современные браузеры блокируют автозапуск звука. Поэтому воспроизведение всегда начинается только после вашего клика по кнопке PLAY — это нормально.</p></div>
+
+        <h2 id="cis">Доступ из СНГ без VPN</h2>
+        <p>Мы специально подобрали станции, серверы которых стабильно доступны из России, Беларуси, Казахстана и других стран СНГ <strong>без VPN и прокси</strong>. Это публичные вещатели из Германии (Rock Antenne, 0N Radio, laut.fm) и США (181.fm), которые не применяют геоблокировку по региону.</p>
+        <p>Всё, что нужно, — обычное интернет-соединение. Если у вашего провайдера есть ограничения на отдельные зарубежные адреса, просто выберите другую станцию из списка: при сбое плеер автоматически предложит следующий поток.</p>
+
+        <h2 id="quality">Битрейт и качество звука</h2>
+        <p><strong>Битрейт</strong> — это объём данных в секунду, он напрямую влияет на качество. Наши потоки идут в диапазоне 128–192 kbps в формате MP3:</p>
+        <ul>
+          <li><strong>128 kbps</strong> — отличный баланс качества и трафика, подходит для мобильного интернета.</li>
+          <li><strong>192 kbps</strong> — заметно чище на хорошей акустике и в наушниках (потоки 0N Radio).</li>
+        </ul>
+        <p>За час прослушивания на 128 kbps расходуется примерно 55–60 МБ трафика, на 192 kbps — около 85 МБ. Учитывайте это при мобильном тарифе с лимитом.</p>
+
+        <h2 id="trouble">Если поток не играет</h2>
+        <ul>
+          <li><strong>Тишина после нажатия PLAY?</strong> Проверьте, не выкручена ли громкость в ноль и не отключён ли звук вкладки в браузере.</li>
+          <li><strong>«Ошибка потока»?</strong> Сервер вещателя мог временно перегрузиться — выберите другую станцию, плеер сам предложит замену.</li>
+          <li><strong>Долгая «загрузка»?</strong> При медленном соединении буфер набирается дольше. Подождите 10–15 секунд.</li>
+          <li><strong>Ничего не помогает?</strong> Обновите страницу (F5) и попробуйте снова. На корпоративных сетях аудиопотоки иногда блокируются фаерволом.</li>
+        </ul>
+
+        <h2 id="tips">Советы для лучшего звучания</h2>
+        <div class="info-grid">
+          <div class="info-card"><div class="ic-emoji">🎧</div><h3>Наушники</h3><p>Hard Rock раскрывается в деталях: панорама гитар, работа баса, тарелки. Хорошие наушники меняют всё.</p></div>
+          <div class="info-card"><div class="ic-emoji">📶</div><h3>Стабильный Wi-Fi</h3><p>Для потоков 192 kbps лучше стабильное соединение — меньше рывков и пересборок буфера.</p></div>
+          <div class="info-card"><div class="ic-emoji">🔊</div><h3>Громкость в системе</h3><p>Держите громкость браузера на максимуме, а регулируйте системным ползунком — меньше искажений.</p></div>
+          <div class="info-card"><div class="ic-emoji">🌙</div><h3>Тёмная тема</h3><p>Переключатель темы в шапке. Тёмная — для вечера, светлая — для яркого дня. Выбор запоминается.</p></div>
+        </div>
+
+        <div class="callout" style="margin-top:var(--space-10)"><h3>Готовы?</h3><p>Теория закончилась — пора слушать. Нажмите PLAY вверху и выберите станцию под настроение. Не уверены, с чего начать? Загляните в <a href="subgenres.html">путеводитель по поджанрам</a>.</p></div>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <p>© <span data-year>2025</span> Iron Wave Radio. Радиопотоки принадлежат соответствующим вещателям.</p>
+      <p><a href="index.html" style="color:var(--color-text-muted);text-decoration:none">← На главную</a></p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

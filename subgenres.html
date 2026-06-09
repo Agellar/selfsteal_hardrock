@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Поджанры Hard Rock — от классики до ню-метала | Iron Wave Radio</title>
+  <meta name="description" content="Путеводитель по поджанрам тяжёлой музыки: classic rock, blues rock, glam metal, heavy metal, grunge, nu-metal, stoner rock и другие. Чем они отличаются и что слушать.">
+  <link rel="canonical" href="/subgenres.html">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23111'/%3E%3Cpath d='M6 8 L6 24 L10 24 L10 17 L16 17 L16 24 L20 24 L20 8 L16 8 L16 14 L10 14 L10 8 Z' fill='%23e63946'/%3E%3Cpath d='M22 8 L22 24 L26 24 L26 8 Z' fill='%23e63946'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/fonts.css">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<a href="#main" class="btn btn-primary" style="position:absolute;top:-60px;left:var(--space-2);z-index:9999;" onfocus="this.style.top='var(--space-2)'" onblur="this.style.top='-60px'">Перейти к содержимому</a>
+
+<div id="cookie-banner" role="dialog" aria-label="Уведомление о cookies">
+  <p>Мы используем только строго необходимые технические данные, хранящиеся локально в браузере. Трекеров и рекламы нет. Подробнее — в <a href="about.html#privacy">Политике конфиденциальности</a>.</p>
+  <div class="cookie-btns">
+    <button class="btn btn-primary" onclick="acceptCookies()">Принять</button>
+    <button class="btn btn-outline" onclick="closeCookieBanner()">Только необходимые</button>
+  </div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo" aria-label="IRON WAVE RADIO — на главную">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+        <path d="M18 3 L30 10 L30 26 L18 33 L6 26 L6 10 Z" fill="currentColor" opacity="0.15"/>
+        <path d="M18 3 L30 10 L30 26 L18 33 L6 26 L6 10 Z" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M14 8 L22 8 L16 19 L21 19 L12 30 L15 20 L10 20 Z" fill="currentColor"/>
+      </svg>
+      <div><span class="logo-text">Iron Wave</span><span class="logo-sub">Hard Rock Radio</span></div>
+    </a>
+    <nav class="main-nav" aria-label="Основная навигация">
+      <a href="index.html">Главная</a>
+      <a href="history.html">История</a>
+      <a href="artists.html">Артисты</a>
+      <a href="subgenres.html" aria-current="page">Поджанры</a>
+      <a href="guide.html">Как слушать</a>
+      <a href="about.html">О нас</a>
+    </nav>
+    <div class="header-actions">
+      <button id="theme-toggle" aria-label="Переключить тему"></button>
+      <button class="hamburger" id="hamburger" aria-label="Меню" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<nav class="mobile-menu hidden" id="mobile-menu" aria-label="Мобильное меню">
+  <a href="index.html">🏠 Главная</a>
+  <a href="history.html">📖 История</a>
+  <a href="artists.html">🎸 Артисты</a>
+  <a href="subgenres.html">🎚️ Поджанры</a>
+  <a href="guide.html">🎧 Как слушать</a>
+  <a href="about.html">⚡ О нас</a>
+</nav>
+
+<div class="player-bar" role="region" aria-label="Плеер">
+  <div class="player-inner">
+    <div class="station-info">
+      <div class="vinyl-icon" id="vinyl" aria-hidden="true"></div>
+      <div>
+        <div class="station-name" id="current-station-name">Rock Antenne</div>
+        <div class="now-playing">В эфире: <span id="now-track">Нажми PLAY для начала</span></div>
+      </div>
+    </div>
+    <div class="player-controls">
+      <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+      <label class="sr-only" for="station-select">Выбор станции</label>
+      <select id="station-select" class="station-select" aria-label="Выбор станции"></select>
+      <button class="play-btn" id="play-btn" onclick="togglePlay()" aria-label="Воспроизвести / Остановить">
+        <svg id="play-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+      </button>
+      <div class="volume-wrap" aria-label="Громкость">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+        <input type="range" id="volume" min="0" max="1" step="0.05" value="0.8" aria-label="Громкость">
+      </div>
+    </div>
+  </div>
+</div>
+<audio id="radio-player" preload="none"></audio>
+
+<main id="main">
+  <section class="page-hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Главная</a><span>/</span>Поджанры</div>
+      <h1 class="page-title">Поджанры <em>тяжёлой музыки</em></h1>
+      <p class="page-intro">«Хард-рок» — это зонтик над десятком стилей. Разбираемся, чем blues rock отличается от stoner rock, а glam metal — от thrash, и какие наши потоки подходят под каждое настроение.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="info-grid">
+        <div class="info-card"><div class="ic-emoji">🎺</div><h3>Blues Rock</h3><p>Фундамент всего. Электрифицированный блюз с тяжёлым грувом. Длинные импровизации, «грязный» тон.</p><p class="essential" style="color:var(--color-text-faint);font-size:var(--text-xs);margin-top:var(--space-2)">Cream, ранние Led Zeppelin, Free</p></div>
+        <div class="info-card"><div class="ic-emoji">🏆</div><h3>Classic Rock</h3><p>Канон 70–80-х: мелодичные риффы, сильные вокальные партии, радиоформат. Сердце большинства рок-станций.</p><p class="essential" style="color:var(--color-text-faint);font-size:var(--text-xs);margin-top:var(--space-2)">Deep Purple, AC/DC, Aerosmith</p></div>
+        <div class="info-card"><div class="ic-emoji">⚙️</div><h3>Heavy Metal</h3><p>Утяжелённый хард-рок: ниже строй, мощнее дисторшн, выше скорость. Тёмные темы и виртуозность.</p><p class="essential" style="color:var(--color-text-faint);font-size:var(--text-xs);margin-top:var(--space-2)">Black Sabbath, Judas Priest, Iron Maiden</p></div>
+        <div class="info-card"><div class="ic-emoji">💇</div><h3>Glam / Hair Metal</h3><p>Хард-рок 80-х с поп-чувствительностью: неотразимые припевы, баллады и максимальный визуальный блеск.</p><p class="essential" style="color:var(--color-text-faint);font-size:var(--text-xs);margin-top:var(--space-2)">Mötley Crüe, Def Leppard, Bon Jovi</p></div>
+        <div class="info-card"><div class="ic-emoji">⚔️</div><h3>Thrash Metal</h3><p>Скорость, агрессия и техничность. Родился из союза NWOBHM и панка в начале 80-х.</p><p class="essential" style="color:var(--color-text-faint);font-size:var(--text-xs);margin-top:var(--space-2)">Metallica, Megadeth, Slayer</p></div>
+        <div class="info-card"><div class="ic-emoji">🌧️</div><h3>Grunge</h3><p>Сиэтл начала 90-х: сырость, динамика «тихо-громко», меланхолия и отказ от глянца.</p><p class="essential" style="color:var(--color-text-faint);font-size:var(--text-xs);margin-top:var(--space-2)">Nirvana, Soundgarden, Alice in Chains</p></div>
+        <div class="info-card"><div class="ic-emoji">🔗</div><h3>Nu-Metal</h3><p>Рубеж тысячелетий: сплав метала с хип-хопом, электроникой и грувом. Низкие строи и эмоциональный вокал.</p><p class="essential" style="color:var(--color-text-faint);font-size:var(--text-xs);margin-top:var(--space-2)">Linkin Park, System of a Down, Korn</p></div>
+        <div class="info-card"><div class="ic-emoji">🌵</div><h3>Stoner Rock</h3><p>Густой, «пустынный» звук: гудящие низкие частоты, психоделика и медленный гипнотический грув.</p><p class="essential" style="color:var(--color-text-faint);font-size:var(--text-xs);margin-top:var(--space-2)">Queens of the Stone Age, Kyuss</p></div>
+        <div class="info-card"><div class="ic-emoji">🧷</div><h3>Punk Rock</h3><p>Скорость, простота и бунт. Не подвид хард-рока, но его постоянный спутник и источник энергии.</p><p class="essential" style="color:var(--color-text-faint);font-size:var(--text-xs);margin-top:var(--space-2)">Ramones, The Clash, Bad Religion</p></div>
+        <div class="info-card"><div class="ic-emoji">📻</div><h3>Post-Grunge</h3><p>Радиоформатный наследник гранжа: мелодичнее, чище, ориентирован на чарты.</p><p class="essential" style="color:var(--color-text-faint);font-size:var(--text-xs);margin-top:var(--space-2)">Foo Fighters, Nickelback, Creed</p></div>
+        <div class="info-card"><div class="ic-emoji">🍃</div><h3>Alternative Rock</h3><p>Широкий зонтик для всего, что вне мейнстрима: от инди до арт-рока, с роковой основой.</p><p class="essential" style="color:var(--color-text-faint);font-size:var(--text-xs);margin-top:var(--space-2)">R.E.M., Pixies, Muse</p></div>
+        <div class="info-card"><div class="ic-emoji">🔥</div><h3>Modern / Retro Rock</h3><p>Новая волна 2010–2020-х, возрождающая дух 70-х с современным продакшеном.</p><p class="essential" style="color:var(--color-text-faint);font-size:var(--text-xs);margin-top:var(--space-2)">Greta Van Fleet, Rival Sons, Ghost</p></div>
+      </div>
+
+      <article class="prose" style="margin-top:var(--space-16)">
+        <h2>Как выбрать поток под настроение</h2>
+        <p>Не обязательно разбираться в теории, чтобы поймать нужную волну. Вот короткая шпаргалка по нашим станциям:</p>
+        <ul>
+          <li><strong>Хотите классику?</strong> — «RA Classic Perlen» и «0N Classic Rock».</li>
+          <li><strong>Нужен драйв и тяжесть?</strong> — «181.fm Hard Rock», «Rock Antenne Heavy Metal», «laut.fm Metal».</li>
+          <li><strong>Ностальгия по 80-м?</strong> — «181.fm Awesome 80s».</li>
+          <li><strong>Что-то альтернативное?</strong> — «RA Alternative» и «RA Punk Rock».</li>
+          <li><strong>Просто хорошие рок-хиты?</strong> — «181.fm The Rock!», «181.fm Power Hits», «0N Rock».</li>
+        </ul>
+        <div class="callout"><h3>Совет</h3><p>Поджанры — это карта, а не клетка. Большинство великих групп нарушали границы: Led Zeppelin играли и блюз, и фолк, и тяжесть в пределах одного альбома. Слушайте ушами, а не ярлыками.</p></div>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <p>© <span data-year>2025</span> Iron Wave Radio. Радиопотоки принадлежат соответствующим вещателям.</p>
+      <p><a href="index.html" style="color:var(--color-text-muted);text-decoration:none">← На главную</a></p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

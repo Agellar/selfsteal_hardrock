@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IRON WAVE RADIO — Hard Rock Online 24/7</title>
+  <meta name="description" content="Онлайн радиостанция в жанре Hard Rock. 12 живых потоков, история жанра, легендарные исполнители и факты. Слушай чистый рок без рекламы, 24/7.">
+  <meta name="keywords" content="hard rock, hard rock radio, онлайн радио, рок радио, heavy metal, classic rock, слушать рок онлайн">
+  <meta property="og:title" content="Iron Wave Radio — Hard Rock Online">
+  <meta property="og:description" content="12 живых рок-потоков 24/7. Легенды прошлого и новые имена — без остановок, без рекламы.">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="/index.html">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23111'/%3E%3Cpath d='M6 8 L6 24 L10 24 L10 17 L16 17 L16 24 L20 24 L20 8 L16 8 L16 14 L10 14 L10 8 Z' fill='%23e63946'/%3E%3Cpath d='M22 8 L22 24 L26 24 L26 8 Z' fill='%23e63946'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/fonts.css">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<a href="#main" class="btn btn-primary" style="position:absolute;top:-60px;left:var(--space-2);z-index:9999;transition:top .2s;" onfocus="this.style.top='var(--space-2)'" onblur="this.style.top='-60px'">Перейти к содержимому</a>
+
+<!-- Cookie Banner -->
+<div id="cookie-banner" role="dialog" aria-label="Уведомление о cookies">
+  <p>
+    Мы используем только строго необходимые технические данные (воспроизведение потока, выбор темы),
+    которые хранятся локально в вашем браузере. Аналитика, реклама и сторонние трекеры не применяются.
+    Подробнее — в <a href="about.html#privacy">Политике конфиденциальности</a>.
+  </p>
+  <div class="cookie-btns">
+    <button class="btn btn-primary" onclick="acceptCookies()">Принять</button>
+    <button class="btn btn-outline" onclick="closeCookieBanner()">Только необходимые</button>
+  </div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo" aria-label="IRON WAVE RADIO — на главную">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+        <path d="M18 3 L30 10 L30 26 L18 33 L6 26 L6 10 Z" fill="currentColor" opacity="0.15"/>
+        <path d="M18 3 L30 10 L30 26 L18 33 L6 26 L6 10 Z" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M14 8 L22 8 L16 19 L21 19 L12 30 L15 20 L10 20 Z" fill="currentColor"/>
+      </svg>
+      <div>
+        <span class="logo-text">Iron Wave</span>
+        <span class="logo-sub">Hard Rock Radio</span>
+      </div>
+    </a>
+    <nav class="main-nav" aria-label="Основная навигация">
+      <a href="index.html" aria-current="page">Главная</a>
+      <a href="history.html">История</a>
+      <a href="artists.html">Артисты</a>
+      <a href="subgenres.html">Поджанры</a>
+      <a href="guide.html">Как слушать</a>
+      <a href="about.html">О нас</a>
+    </nav>
+    <div class="header-actions">
+      <button id="theme-toggle" aria-label="Переключить тему"></button>
+      <button class="hamburger" id="hamburger" aria-label="Меню" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile menu -->
+<nav class="mobile-menu hidden" id="mobile-menu" aria-label="Мобильное меню">
+  <a href="index.html">🏠 Главная</a>
+  <a href="#streams">🎙️ Стримы</a>
+  <a href="history.html">📖 История</a>
+  <a href="artists.html">🎸 Артисты</a>
+  <a href="subgenres.html">🎚️ Поджанры</a>
+  <a href="guide.html">🎧 Как слушать</a>
+  <a href="about.html">⚡ О нас</a>
+</nav>
+
+<!-- Player Bar -->
+<div class="player-bar" role="region" aria-label="Плеер">
+  <div class="player-inner">
+    <div class="station-info">
+      <div class="vinyl-icon" id="vinyl" aria-hidden="true"></div>
+      <div>
+        <div class="station-name" id="current-station-name">Rock Antenne</div>
+        <div class="now-playing">В эфире: <span id="now-track">Нажми PLAY для начала</span></div>
+      </div>
+    </div>
+    <div class="player-controls">
+      <div class="live-badge" aria-label="Живое вещание"><div class="live-dot"></div>LIVE</div>
+      <label class="sr-only" for="station-select">Выбор станции</label>
+      <select id="station-select" class="station-select" aria-label="Выбор станции"></select>
+      <button class="play-btn" id="play-btn" onclick="togglePlay()" aria-label="Воспроизвести / Остановить">
+        <svg id="play-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+      </button>
+      <div class="volume-wrap" aria-label="Громкость">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+        <input type="range" id="volume" min="0" max="1" step="0.05" value="0.8" aria-label="Громкость">
+      </div>
+    </div>
+  </div>
+</div>
+
+<audio id="radio-player" preload="none"></audio>
+
+<main id="main">
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="hero-inner container">
+      <div>
+        <span class="hero-tag">⚡ Онлайн Радио 24/7</span>
+        <h1 id="hero-title">Живи<em>на максимум</em></h1>
+        <p>Самый мощный поток Hard Rock в сети. Двенадцать живых станций — от классики 70-х до тяжёлого метала. Легенды прошлого и новые имена, без остановок и без рекламы. Только чистый рок.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary btn-lg" onclick="togglePlay()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>
+            Слушать сейчас
+          </button>
+          <a href="history.html" class="btn btn-outline btn-lg">История жанра</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item"><div class="stat-num">12</div><div class="stat-label">потоков 24/7</div></div>
+          <div class="stat-item"><div class="stat-num">60+</div><div class="stat-label">лет жанру</div></div>
+          <div class="stat-item"><div class="stat-num">∞</div><div class="stat-label">децибел</div></div>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="album-stack">
+          <div class="album-card"><div class="album-art">🎸</div><div class="album-title">Classic Rock</div><div class="album-band">All Time</div></div>
+          <div class="album-card"><div class="album-art">🔥</div><div class="album-title">Metal Edge</div><div class="album-band">Heavy</div></div>
+          <div class="album-card"><div class="album-art">⚡</div><div class="album-title">Hard Rock</div><div class="album-band">Live Stream</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Streams -->
+  <section class="section" id="streams" aria-labelledby="streams-title">
+    <div class="container">
+      <div class="section-header fade-in">
+        <span class="section-tag">📡 Живые потоки</span>
+        <h2 class="section-title" id="streams-title">Выбери станцию</h2>
+        <p class="section-lead">Двенадцать потоков от проверенных вещателей Германии и США. Все передаются по защищённому HTTPS и доступны без VPN. Кликни на карточку — поток переключится мгновенно.</p>
+      </div>
+      <div class="streams-grid" id="streams-grid"></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Why us -->
+  <section class="section" aria-labelledby="why-title">
+    <div class="container">
+      <div class="section-header fade-in">
+        <span class="section-tag">🤘 Почему Iron Wave</span>
+        <h2 class="section-title" id="why-title">Сделано фанатами для фанатов</h2>
+        <p class="section-lead">Мы не аналитический сервис и не рекламная сеть. Мы — витрина живого рока, собранная вручную.</p>
+      </div>
+      <div class="info-grid fade-in">
+        <div class="info-card"><div class="ic-emoji">🚫</div><h3>Без рекламы</h3><p>Никаких рекламных вставок между треками. Поток идёт от вещателя напрямую в ваш браузер.</p></div>
+        <div class="info-card"><div class="ic-emoji">🔒</div><h3>Только HTTPS</h3><p>Все соединения шифруются. Мы не собираем персональные данные и не используем трекеры.</p></div>
+        <div class="info-card"><div class="ic-emoji">🌍</div><h3>Работает в СНГ</h3><p>Потоки подобраны так, чтобы воспроизводиться из стран СНГ без VPN и прокси.</p></div>
+        <div class="info-card"><div class="ic-emoji">⚡</div><h3>Мгновенный старт</h3><p>Лёгкий статический сайт без тяжёлых фреймворков. Открывается за доли секунды.</p></div>
+        <div class="info-card"><div class="ic-emoji">🎚️</div><h3>12 настроений</h3><p>Классика, хард-рок, хэви-метал, глэм, панк, альтернатива — для любого момента.</p></div>
+        <div class="info-card"><div class="ic-emoji">📚</div><h3>Не только музыка</h3><p>История жанра, профили легенд, разбор поджанров и гид для новичков.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- History teaser -->
+  <section class="section" aria-labelledby="hist-title">
+    <div class="container">
+      <div class="section-header fade-in">
+        <span class="section-tag">📖 История</span>
+        <h2 class="section-title" id="hist-title">Эволюция жанра</h2>
+        <p class="section-lead">От первых тяжёлых аккордов конца 60-х до цифрового ренессанса. Краткая хронология — полная история на отдельной странице.</p>
+      </div>
+      <div class="timeline fade-in">
+        <div class="timeline-item"><div class="timeline-year">1964–69</div><h3>Рождение жанра</h3><p>The Kinks, Cream, The Who и Led Zeppelin превращают громкость в инструмент. Появляется «тяжёлое» звучание.</p></div>
+        <div class="timeline-item"><div class="timeline-year">1970-е</div><h3>Золотой век</h3><p>Deep Purple, Black Sabbath, AC/DC и Aerosmith формируют канон. Дисторшн и риффы становятся языком жанра.</p></div>
+        <div class="timeline-item"><div class="timeline-year">1980-е</div><h3>Эпоха глэм-метала</h3><p>Bon Jovi, Mötley Crüe и Guns N' Roses захватывают MTV и стадионы. Рок становится зрелищем.</p></div>
+        <div class="timeline-item"><div class="timeline-year">2020+</div><h3>Цифровой ренессанс</h3><p>Ghost, Greta Van Fleet и Rival Sons ведут новое поколение. Стриминг открывает классику миллионам.</p></div>
+      </div>
+      <p style="margin-top:var(--space-8)"><a class="btn btn-outline" href="history.html">Читать полную историю →</a></p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Artists teaser -->
+  <section class="section" aria-labelledby="art-title">
+    <div class="container">
+      <div class="section-header fade-in">
+        <span class="section-tag">🎸 Легенды</span>
+        <h2 class="section-title" id="art-title">Лучшие исполнители</h2>
+        <p class="section-lead">Группы, которые создали и определили звучание Hard Rock. Подробные профили — на странице «Артисты».</p>
+      </div>
+      <div class="artists-grid fade-in">
+        <div class="artist-card"><div class="artist-avatar">🎸</div><h3>Led Zeppelin</h3><p>Родоначальники хард-рока</p><span class="artist-years">1968–1980</span></div>
+        <div class="artist-card"><div class="artist-avatar">⚡</div><h3>AC/DC</h3><p>Самый энергичный состав в истории</p><span class="artist-years">1973—н.в.</span></div>
+        <div class="artist-card"><div class="artist-avatar">🔮</div><h3>Deep Purple</h3><p>«Smoke on the Water»</p><span class="artist-years">1968—н.в.</span></div>
+        <div class="artist-card"><div class="artist-avatar">🖤</div><h3>Black Sabbath</h3><p>Крёстный отец метала</p><span class="artist-years">1968–2017</span></div>
+        <div class="artist-card"><div class="artist-avatar">🌹</div><h3>Guns N' Roses</h3><p>Самый громкий дебют 80-х</p><span class="artist-years">1985—н.в.</span></div>
+        <div class="artist-card"><div class="artist-avatar">🔱</div><h3>Metallica</h3><p>Самая успешная метал-группа</p><span class="artist-years">1981—н.в.</span></div>
+      </div>
+      <p style="margin-top:var(--space-8)"><a class="btn btn-outline" href="artists.html">Все артисты и профили →</a></p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Facts -->
+  <section class="section" id="facts" aria-labelledby="facts-title">
+    <div class="container">
+      <div class="section-header fade-in">
+        <span class="section-tag">⚡ Интересное</span>
+        <h2 class="section-title" id="facts-title">Факты о жанре</h2>
+        <p class="section-lead">Коротко о том, что сделало Hard Rock культурным феноменом.</p>
+      </div>
+      <div class="facts-grid fade-in">
+        <div class="fact-card"><div class="fact-num">01</div><h3>Название жанра</h3><p>Термин «hard rock» впервые появился в рецензии Rolling Stone в 1967 году. До этого музыку называли «heavy» или «acid rock».</p></div>
+        <div class="fact-card"><div class="fact-num">02</div><h3>Главный рифф</h3><p>«Smoke on the Water» (Deep Purple, 1972) — самый узнаваемый рифф в истории. С него начинают миллионы гитаристов.</p></div>
+        <div class="fact-card"><div class="fact-num">03</div><h3>Громкость как инструмент</h3><p>В 70-е концерты шли на звуковом давлении свыше 130 дБ — уровень взлетающего самолёта.</p></div>
+        <div class="fact-card"><div class="fact-num">04</div><h3>Самый продаваемый</h3><p>«Back in Black» AC/DC (1980) — более 50 млн копий, одна из самых продаваемых пластинок в истории.</p></div>
+        <div class="fact-card"><div class="fact-num">05</div><h3>Культура Live</h3><p>KISS в 1975-м первыми вывели на сцену пиротехнику и летающие платформы, создав мегашоу.</p></div>
+        <div class="fact-card"><div class="fact-num">06</div><h3>Влияние на технологии</h3><p>Marshall построил первый 100-ваттный усилитель по заказу Pete Townshend из The Who в 1965 году.</p></div>
+      </div>
+      <p style="margin-top:var(--space-8)"><a class="btn btn-outline" href="subgenres.html">Разобраться в поджанрах →</a></p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="cta-strip fade-in">
+        <h2>Включи громче</h2>
+        <p>Двенадцать потоков ждут. Выбирай настроение и дай року звучать так, как он должен — на максимум.</p>
+        <button class="btn btn-primary btn-lg" onclick="togglePlay()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>
+          Слушать сейчас
+        </button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="logo" aria-label="IRON WAVE RADIO">
+          <svg width="32" height="32" viewBox="0 0 36 36" fill="none">
+            <path d="M18 3 L30 10 L30 26 L18 33 L6 26 L6 10 Z" fill="currentColor" opacity="0.15"/>
+            <path d="M18 3 L30 10 L30 26 L18 33 L6 26 L6 10 Z" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M14 8 L22 8 L16 19 L21 19 L12 30 L15 20 L10 20 Z" fill="currentColor"/>
+          </svg>
+          <span class="logo-text" style="color:var(--color-text);">Iron Wave</span>
+        </a>
+        <p>Онлайн радиостанция в жанре Hard Rock. Работаем круглосуточно, 365 дней в году. Никаких перерывов — только рок.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Разделы</h4>
+        <ul>
+          <li><a href="history.html">История жанра</a></li>
+          <li><a href="artists.html">Артисты</a></li>
+          <li><a href="subgenres.html">Поджанры</a></li>
+          <li><a href="guide.html">Как слушать</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Слушать</h4>
+        <ul>
+          <li><a href="#streams">Все потоки</a></li>
+          <li><a href="#facts">Факты о жанре</a></li>
+          <li><a href="about.html">О радиостанции</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Документы</h4>
+        <ul>
+          <li><a href="about.html#privacy">Политика конфиденциальности</a></li>
+          <li><a href="about.html#cookies">Политика cookies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span data-year>2025</span> Iron Wave Radio. Радиопотоки принадлежат соответствующим вещателям.</p>
+      <p>Сделано с ❤️ для любителей Hard Rock</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>История Hard Rock — от Led Zeppelin до цифровой эпохи | Iron Wave Radio</title>
+  <meta name="description" content="Полная история жанра Hard Rock: рождение в конце 60-х, золотой век 70-х, NWOBHM, эпоха глэм-метала, гранж и цифровой ренессанс. Хронология, ключевые альбомы и группы.">
+  <link rel="canonical" href="/history.html">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23111'/%3E%3Cpath d='M6 8 L6 24 L10 24 L10 17 L16 17 L16 24 L20 24 L20 8 L16 8 L16 14 L10 14 L10 8 Z' fill='%23e63946'/%3E%3Cpath d='M22 8 L22 24 L26 24 L26 8 Z' fill='%23e63946'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/fonts.css">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<a href="#main" class="btn btn-primary" style="position:absolute;top:-60px;left:var(--space-2);z-index:9999;" onfocus="this.style.top='var(--space-2)'" onblur="this.style.top='-60px'">Перейти к содержимому</a>
+
+<div id="cookie-banner" role="dialog" aria-label="Уведомление о cookies">
+  <p>Мы используем только строго необходимые технические данные, хранящиеся локально в браузере. Трекеров и рекламы нет. Подробнее — в <a href="about.html#privacy">Политике конфиденциальности</a>.</p>
+  <div class="cookie-btns">
+    <button class="btn btn-primary" onclick="acceptCookies()">Принять</button>
+    <button class="btn btn-outline" onclick="closeCookieBanner()">Только необходимые</button>
+  </div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo" aria-label="IRON WAVE RADIO — на главную">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+        <path d="M18 3 L30 10 L30 26 L18 33 L6 26 L6 10 Z" fill="currentColor" opacity="0.15"/>
+        <path d="M18 3 L30 10 L30 26 L18 33 L6 26 L6 10 Z" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M14 8 L22 8 L16 19 L21 19 L12 30 L15 20 L10 20 Z" fill="currentColor"/>
+      </svg>
+      <div><span class="logo-text">Iron Wave</span><span class="logo-sub">Hard Rock Radio</span></div>
+    </a>
+    <nav class="main-nav" aria-label="Основная навигация">
+      <a href="index.html">Главная</a>
+      <a href="history.html" aria-current="page">История</a>
+      <a href="artists.html">Артисты</a>
+      <a href="subgenres.html">Поджанры</a>
+      <a href="guide.html">Как слушать</a>
+      <a href="about.html">О нас</a>
+    </nav>
+    <div class="header-actions">
+      <button id="theme-toggle" aria-label="Переключить тему"></button>
+      <button class="hamburger" id="hamburger" aria-label="Меню" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<nav class="mobile-menu hidden" id="mobile-menu" aria-label="Мобильное меню">
+  <a href="index.html">🏠 Главная</a>
+  <a href="history.html">📖 История</a>
+  <a href="artists.html">🎸 Артисты</a>
+  <a href="subgenres.html">🎚️ Поджанры</a>
+  <a href="guide.html">🎧 Как слушать</a>
+  <a href="about.html">⚡ О нас</a>
+</nav>
+
+<div class="player-bar" role="region" aria-label="Плеер">
+  <div class="player-inner">
+    <div class="station-info">
+      <div class="vinyl-icon" id="vinyl" aria-hidden="true"></div>
+      <div>
+        <div class="station-name" id="current-station-name">Rock Antenne</div>
+        <div class="now-playing">В эфире: <span id="now-track">Нажми PLAY для начала</span></div>
+      </div>
+    </div>
+    <div class="player-controls">
+      <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+      <label class="sr-only" for="station-select">Выбор станции</label>
+      <select id="station-select" class="station-select" aria-label="Выбор станции"></select>
+      <button class="play-btn" id="play-btn" onclick="togglePlay()" aria-label="Воспроизвести / Остановить">
+        <svg id="play-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+      </button>
+      <div class="volume-wrap" aria-label="Громкость">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+        <input type="range" id="volume" min="0" max="1" step="0.05" value="0.8" aria-label="Громкость">
+      </div>
+    </div>
+  </div>
+</div>
+<audio id="radio-player" preload="none"></audio>
+
+<main id="main">
+  <section class="page-hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Главная</a><span>/</span>История</div>
+      <h1 class="page-title">История <em>Hard Rock</em></h1>
+      <p class="page-intro">Шесть десятилетий тяжёлых риффов: как блюзовая импровизация превратилась в самый громкий жанр планеты — и почему он до сих пор жив.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <article class="prose">
+        <nav class="toc" aria-label="Содержание">
+          <h2>Содержание</h2>
+          <ol>
+            <li><a href="#origins">Истоки: блюз становится тяжёлым (1964–1969)</a></li>
+            <li><a href="#golden">Золотой век (1970-е)</a></li>
+            <li><a href="#nwobhm">Новая волна британского хэви-метала (конец 70-х)</a></li>
+            <li><a href="#glam">Эпоха глэм-метала и стадионов (1980-е)</a></li>
+            <li><a href="#grunge">Гранж и переоценка (1990-е)</a></li>
+            <li><a href="#2000s">Диверсификация (2000–2010-е)</a></li>
+            <li><a href="#today">Цифровой ренессанс (2020+)</a></li>
+          </ol>
+        </nav>
+
+        <h2 id="origins">Истоки: блюз становится тяжёлым</h2>
+        <p>Hard Rock не родился в один день. Он вырос из <strong>британского блюз-рока</strong> середины 1960-х, когда молодые гитаристы Альбиона — впитавшие Мадди Уотерса и Хаулин Вульфа — начали играть громче, грязнее и агрессивнее своих американских учителей. Ключевым стал звук перегруженного лампового усилителя: то, что инженеры считали браком, музыканты превратили в выразительное средство.</p>
+        <p>The Kinks с синглом «You Really Got Me» (1964) подарили миру один из первых по-настоящему «тяжёлых» риффов — Дэйв Дэвис буквально прорезал динамик бритвой, чтобы добиться рычащего тембра. The Who довели до предела громкость и сценическую агрессию. Cream Эрика Клэптона показали, что рок может быть виртуозным и импровизационным. А Jeff Beck Group и ранние Led Zeppelin собрали все элементы воедино.</p>
+        <blockquote>«Мы хотели звучать как землетрясение». <cite>— дух эпохи, который разделяли почти все ранние хард-рок-группы</cite></blockquote>
+        <p>К 1969 году дебютные альбомы Led Zeppelin и появление Black Sabbath обозначили рождение зрелого стиля: мощные риффы, высокий пронзительный вокал, ритм-секция как таран и громкость, возведённая в принцип.</p>
+
+        <h2 id="golden">Золотой век: 1970-е</h2>
+        <p>Семидесятые — это канон. Именно тогда сложились звуковые формулы, которым жанр следует до сих пор. <strong>Deep Purple</strong>, <strong>Black Sabbath</strong>, <strong>Led Zeppelin</strong>, <strong>AC/DC</strong> и <strong>Aerosmith</strong> определили, как должен звучать хард-рок.</p>
+        <ul>
+          <li><strong>Deep Purple</strong> с альбомом «Machine Head» (1972) и риффом «Smoke on the Water» создали, возможно, самую узнаваемую гитарную фразу в истории.</li>
+          <li><strong>Black Sabbath</strong> утяжелили звук до предела, заложив фундамент хэви-метала — тёмные тональности, медленные «свинцовые» риффы Тони Айомми.</li>
+          <li><strong>AC/DC</strong> довели жанр до первобытной простоты: грув, драйв и ни одной лишней ноты.</li>
+          <li><strong>Led Zeppelin</strong> расширили палитру — от тяжёлых боевиков до фолка и восточных мотивов.</li>
+        </ul>
+        <div class="callout"><h3>Громкость как оружие</h3><p>Концерты Deep Purple в 1972 году попали в Книгу рекордов Гиннесса как «самое громкое представление» — около 117 дБ. Несколько зрителей потеряли сознание. Для индустрии это стало рекламой, а не предупреждением.</p></div>
+
+        <h2 id="nwobhm">Новая волна британского хэви-метала</h2>
+        <p>На рубеже 70-х и 80-х в Британии вспыхнуло движение <strong>NWOBHM (New Wave of British Heavy Metal)</strong>. Iron Maiden, Saxon, Def Leppard и Motörhead соединили энергию панка со сложностью хард-рока. Темп вырос, риффы стали острее, а вокал — выше. Это движение напрямую породило трэш-метал (Metallica открыто называли Diamond Head и Motörhead своими учителями) и задало планку технического мастерства на десятилетия вперёд.</p>
+
+        <h2 id="glam">Эпоха глэм-метала и стадионов</h2>
+        <p>Восьмидесятые превратили хард-рок в массовое зрелище. С приходом <strong>MTV</strong> визуальная сторона стала не менее важной, чем музыка. Лос-Анджелесский Sunset Strip породил волну глэм- (или «хеир»-) метала: пышные причёски, кожа, заклёпки и неотразимые припевы.</p>
+        <ul>
+          <li><strong>Bon Jovi</strong> с «Slippery When Wet» (1986) сделали стадионный рок мейнстримом.</li>
+          <li><strong>Mötley Crüe</strong> воплотили декаданс и эпатаж эпохи.</li>
+          <li><strong>Def Leppard</strong> довели студийную полировку до совершенства на «Hysteria».</li>
+          <li><strong>Guns N' Roses</strong> вернули в жанр опасность и уличную грязь — «Appetite for Destruction» (1987) стал самым продаваемым дебютным альбомом в истории США.</li>
+        </ul>
+
+        <h2 id="grunge">Гранж и переоценка</h2>
+        <p>В начале 90-х из Сиэтла пришёл <strong>гранж</strong>. Nirvana, Soundgarden, Pearl Jam и Alice in Chains принесли сырость, меланхолию и отказ от показного блеска. Глэм-метал в одночасье вышел из моды. Многие «классические» группы либо адаптировались, либо ушли в тень. Но жанр не умер: Metallica с «чёрным альбомом» (1991) достигла пика популярности, а AC/DC и KISS продолжали собирать стадионы. Гранж, по сути, был не врагом хард-рока, а его честной, утяжелённой версией для нового поколения.</p>
+
+        <h2 id="2000s">Диверсификация: 2000–2010-е</h2>
+        <p>Новое тысячелетие принесло ветвление. <strong>Nu-metal</strong> (Linkin Park, System of a Down, Korn) скрестил рок с хип-хопом и электроникой. <strong>Post-grunge</strong> (Foo Fighters, Nickelback, Creed) держал радиоформат. Параллельно развивались <strong>stoner rock</strong> (Queens of the Stone Age) и гаражное возрождение (The White Stripes). Ветераны — Ozzy Osbourne, Slash, Aerosmith — оставались актуальны, а фестивали Download и Wacken Open Air собирали сотни тысяч фанатов.</p>
+
+        <h2 id="today">Цифровой ренессанс: 2020+</h2>
+        <p>Сегодня хард-рок переживает новую волну. <strong>Ghost</strong> превращают тяжёлую музыку в театр, <strong>Greta Van Fleet</strong> и <strong>Rival Sons</strong> возрождают дух 70-х для зумеров, а стриминговые плейлисты и алгоритмы YouTube открывают классику миллионам новых слушателей. Интернет-радио — вроде того, что вы слушаете прямо сейчас — стало естественной средой обитания жанра: вечный эфир без границ и расписания.</p>
+        <p>Жанр, который хоронили в каждом десятилетии, оказался удивительно живучим. Он эволюционирует, дробится на поджанры и снова собирается — но всегда остаётся громким.</p>
+
+        <div class="callout"><h3>Что слушать дальше</h3><p>Загляните в раздел <a href="artists.html">«Артисты»</a> за подробными профилями легенд или разберитесь в стилях на странице <a href="subgenres.html">«Поджанры»</a>. А лучше — просто нажмите PLAY вверху страницы.</p></div>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <p>© <span data-year>2025</span> Iron Wave Radio. Радиопотоки принадлежат соответствующим вещателям.</p>
+      <p><a href="index.html" style="color:var(--color-text-muted);text-decoration:none">← На главную</a></p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

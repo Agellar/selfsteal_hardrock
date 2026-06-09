@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>О радиостанции, конфиденциальность и cookies | Iron Wave Radio</title>
+  <meta name="description" content="О проекте Iron Wave Radio, политика конфиденциальности по 152-ФЗ и политика использования cookie. Мы не собираем персональные данные и не используем трекеры.">
+  <link rel="canonical" href="/about.html">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23111'/%3E%3Cpath d='M6 8 L6 24 L10 24 L10 17 L16 17 L16 24 L20 24 L20 8 L16 8 L16 14 L10 14 L10 8 Z' fill='%23e63946'/%3E%3Cpath d='M22 8 L22 24 L26 24 L26 8 Z' fill='%23e63946'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/fonts.css">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<a href="#main" class="btn btn-primary" style="position:absolute;top:-60px;left:var(--space-2);z-index:9999;" onfocus="this.style.top='var(--space-2)'" onblur="this.style.top='-60px'">Перейти к содержимому</a>
+
+<div id="cookie-banner" role="dialog" aria-label="Уведомление о cookies">
+  <p>Мы используем только строго необходимые технические данные, хранящиеся локально в браузере. Трекеров и рекламы нет. Подробнее — в <a href="#privacy">Политике конфиденциальности</a>.</p>
+  <div class="cookie-btns">
+    <button class="btn btn-primary" onclick="acceptCookies()">Принять</button>
+    <button class="btn btn-outline" onclick="closeCookieBanner()">Только необходимые</button>
+  </div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo" aria-label="IRON WAVE RADIO — на главную">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+        <path d="M18 3 L30 10 L30 26 L18 33 L6 26 L6 10 Z" fill="currentColor" opacity="0.15"/>
+        <path d="M18 3 L30 10 L30 26 L18 33 L6 26 L6 10 Z" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M14 8 L22 8 L16 19 L21 19 L12 30 L15 20 L10 20 Z" fill="currentColor"/>
+      </svg>
+      <div><span class="logo-text">Iron Wave</span><span class="logo-sub">Hard Rock Radio</span></div>
+    </a>
+    <nav class="main-nav" aria-label="Основная навигация">
+      <a href="index.html">Главная</a>
+      <a href="history.html">История</a>
+      <a href="artists.html">Артисты</a>
+      <a href="subgenres.html">Поджанры</a>
+      <a href="guide.html">Как слушать</a>
+      <a href="about.html" aria-current="page">О нас</a>
+    </nav>
+    <div class="header-actions">
+      <button id="theme-toggle" aria-label="Переключить тему"></button>
+      <button class="hamburger" id="hamburger" aria-label="Меню" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<nav class="mobile-menu hidden" id="mobile-menu" aria-label="Мобильное меню">
+  <a href="index.html">🏠 Главная</a>
+  <a href="history.html">📖 История</a>
+  <a href="artists.html">🎸 Артисты</a>
+  <a href="subgenres.html">🎚️ Поджанры</a>
+  <a href="guide.html">🎧 Как слушать</a>
+  <a href="about.html">⚡ О нас</a>
+</nav>
+
+<div class="player-bar" role="region" aria-label="Плеер">
+  <div class="player-inner">
+    <div class="station-info">
+      <div class="vinyl-icon" id="vinyl" aria-hidden="true"></div>
+      <div>
+        <div class="station-name" id="current-station-name">Rock Antenne</div>
+        <div class="now-playing">В эфире: <span id="now-track">Нажми PLAY для начала</span></div>
+      </div>
+    </div>
+    <div class="player-controls">
+      <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+      <label class="sr-only" for="station-select">Выбор станции</label>
+      <select id="station-select" class="station-select" aria-label="Выбор станции"></select>
+      <button class="play-btn" id="play-btn" onclick="togglePlay()" aria-label="Воспроизвести / Остановить">
+        <svg id="play-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+      </button>
+      <div class="volume-wrap" aria-label="Громкость">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+        <input type="range" id="volume" min="0" max="1" step="0.05" value="0.8" aria-label="Громкость">
+      </div>
+    </div>
+  </div>
+</div>
+<audio id="radio-player" preload="none"></audio>
+
+<main id="main">
+  <section class="page-hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Главная</a><span>/</span>О нас</div>
+      <h1 class="page-title">О <em>Iron Wave Radio</em></h1>
+      <p class="page-intro">Кто мы, как устроен проект и как мы относимся к вашим данным.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <article class="prose">
+        <h2 id="about">О проекте</h2>
+        <p><strong>Iron Wave Radio</strong> — это некоммерческая витрина живого рока: удобный плеер, объединяющий несколько публичных интернет-радиостанций жанра Hard Rock, и просветительский раздел об истории, артистах и поджанрах тяжёлой музыки.</p>
+        <p>Мы не являемся вещателем. Мы не транслируем музыку со своих серверов и не вмешиваемся в содержание потоков — звук идёт напрямую от станций-первоисточников (Rock Antenne, 181.fm, 0N Radio, laut.fm и др.) в ваш браузер. Все права на музыкальный контент принадлежат соответствующим правообладателям и вещателям.</p>
+        <p>Проект сделан фанатами для фанатов: лёгкий, быстрый, без рекламы и навязчивых уведомлений. Если вам близок дух рока — добро пожаловать в эфир.</p>
+
+        <h2 id="privacy">Политика конфиденциальности</h2>
+        <p><strong>Дата последнего обновления:</strong> <span data-year>2025</span> г.</p>
+        <p>Настоящая Политика разработана в соответствии с требованиями Федерального закона Российской Федерации № 152-ФЗ «О персональных данных» от 27 июля 2006 года и определяет порядок обработки информации на сайте Iron Wave Radio (далее — «Сайт»).</p>
+
+        <h3>1. Основной принцип</h3>
+        <p>Сайт спроектирован по принципу <strong>privacy by design</strong>: он не собирает, не хранит и не передаёт третьим лицам персональные данные пользователей (ФИО, e-mail, телефон, данные геолокации и т. п.). На Сайте отсутствуют формы регистрации, обратной связи и любые поля ввода персональных данных.</p>
+
+        <h3>2. Какие данные обрабатываются</h3>
+        <p>Единственные технические данные обрабатываются и хранятся <strong>локально в вашем браузере</strong> (в хранилище localStorage) и никуда не передаются:</p>
+        <ul>
+          <li><code>theme_preference</code> — выбранная тема оформления (тёмная/светлая);</li>
+          <li><code>cookie_consent</code> — ваш выбор в уведомлении о cookie.</li>
+        </ul>
+        <p>Эти значения не позволяют идентифицировать пользователя и доступны только вашему браузеру на вашем устройстве.</p>
+
+        <h3>3. Аналитика и трекеры</h3>
+        <p>Сайт <strong>не использует</strong> системы веб-аналитики (Яндекс.Метрика, Google Analytics и др.), рекламные сети, пиксели отслеживания, социальные плагины и любые сторонние трекеры. Шрифты и скрипты размещены на самом Сайте и не загружаются со сторонних CDN.</p>
+
+        <h3>4. IP-адрес и соединение с вещателями</h3>
+        <p>Сайт не ведёт журналов, содержащих персональные данные посетителей. Обратите внимание: при нажатии кнопки воспроизведения ваш браузер устанавливает <strong>прямое соединение с сервером радиостанции-вещателя</strong>. В рамках этого соединения вещателю технически становится известен ваш IP-адрес — это необходимое условие доставки аудиопотока. Обработка данных на стороне вещателей регулируется их собственными политиками конфиденциальности, и Сайт не несёт за неё ответственности.</p>
+
+        <h3>5. Передача данных третьим лицам</h3>
+        <p>Персональные данные не собираются и, как следствие, не передаются третьим лицам. Трансграничная передача персональных данных Сайтом не осуществляется.</p>
+
+        <h3>6. Права субъектов персональных данных</h3>
+        <p>В соответствии с ФЗ-152 вы имеете право на получение информации об обработке своих данных, их уточнение, блокирование или уничтожение. Поскольку Сайт не хранит персональные данные на своей стороне, для удаления локальных технических данных достаточно очистить данные сайта в настройках браузера.</p>
+
+        <h3>7. Безопасность</h3>
+        <p>Сайт и аудиопотоки передаются по защищённому протоколу HTTPS/TLS, что исключает перехват данных при передаче.</p>
+
+        <h3>8. Изменения и контакты</h3>
+        <p>Оператор вправе вносить изменения в настоящую Политику; актуальная версия всегда размещается на этой странице. По вопросам, связанным с обработкой данных, можно обратиться к администрации Сайта по контактному адресу, указанному оператором при размещении Сайта.</p>
+
+        <h2 id="cookies">Политика использования Cookie</h2>
+        <p><strong>Дата последнего обновления:</strong> <span data-year>2025</span> г.</p>
+        <p>Политика разработана с учётом требований ФЗ № 152-ФЗ «О персональных данных» и ФЗ № 149-ФЗ «Об информации, информационных технологиях и о защите информации».</p>
+
+        <h3>Что такое cookie и localStorage</h3>
+        <p>Cookie — небольшие текстовые файлы, которые сайт сохраняет в браузере. localStorage — современное браузерное хранилище для пользовательских настроек. И то, и другое хранится на вашем устройстве и помогает сайту «запомнить» ваши предпочтения.</p>
+
+        <h3>Что используем мы</h3>
+        <p><strong>Только строго необходимые (технические) данные</strong>, перечисленные выше (<code>theme_preference</code>, <code>cookie_consent</code>). Они хранятся в localStorage вашего браузера, не имеют срока «протухания» на сервере и не передаются никуда за пределы устройства.</p>
+        <p><strong>Аналитические, маркетинговые и рекламные cookie — НЕ используются.</strong></p>
+
+        <h3>Cookie третьих сторон</h3>
+        <p>При воспроизведении аудиопотока браузер соединяется с сервером вещателя напрямую. Вещатель может использовать собственные технические cookie согласно своей политике. Iron Wave Radio не контролирует и не несёт ответственности за обработку данных сторонними вещателями.</p>
+
+        <h3>Управление</h3>
+        <p>Вы можете в любой момент удалить локальные данные сайта в настройках браузера. Отключение технических данных может сбросить выбор темы и привести к повторному показу уведомления о cookie, но не нарушит воспроизведение.</p>
+
+        <h3>Правовая основа</h3>
+        <p>Обработка технических данных осуществляется на основании законного интереса оператора в обеспечении работоспособности Сайта. Персональные данные при этом не обрабатываются.</p>
+
+        <div class="callout" style="margin-top:var(--space-8)"><h3>Коротко</h3><p>Никакой слежки. Никакой рекламы. Только локальные настройки темы и согласия, которые остаются на вашем устройстве. Включайте PLAY и слушайте спокойно.</p>
+          <div style="margin-top:var(--space-4);display:flex;gap:var(--space-3);flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="acceptCookies()">Принять</button>
+            <button class="btn btn-outline" onclick="closeCookieBanner()">Только необходимые</button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <p>© <span data-year>2025</span> Iron Wave Radio. Радиопотоки принадлежат соответствующим вещателям.</p>
+      <p><a href="index.html" style="color:var(--color-text-muted);text-decoration:none">← На главную</a></p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
