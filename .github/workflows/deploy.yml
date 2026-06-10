@@ -1,0 +1,56 @@
+name: Deploy to server
+
+# Push-to-deploy for the Iron Wave Radio selfsteal site.
+# On every push to main, syncs the repo to the server over SSH and runs the
+# deploy script (which copies files to /var/www/hardrock and reloads Caddy).
+#
+# Required repository secrets (Settings -> Secrets and variables -> Actions):
+#   SSH_HOST  - server IP/hostname            (e.g. 212.147.246.247)
+#   SSH_USER  - SSH user                      (e.g. root)
+#   SSH_KEY   - PRIVATE key of a DEDICATED deploy keypair (full PEM contents)
+# Optional:
+#   SSH_PORT  - SSH port (defaults to 22)
+#
+# The matching PUBLIC key must be in the server's ~/.ssh/authorized_keys.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -p "${SSH_PORT:-22}" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Sync files and run deploy script
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+        run: |
+          PORT="${SSH_PORT:-22}"
+          REMOTE="$SSH_USER@$SSH_HOST"
+          SSH="ssh -p $PORT -i ~/.ssh/id_deploy -o StrictHostKeyChecking=yes"
+          $SSH "$REMOTE" 'mkdir -p /opt/selfsteal_hardrock'
+          rsync -az --delete -e "$SSH" \
+            --exclude='.git' \
+            ./ "$REMOTE:/opt/selfsteal_hardrock/"
+          $SSH "$REMOTE" 'bash /opt/selfsteal_hardrock/deploy/deploy.sh'

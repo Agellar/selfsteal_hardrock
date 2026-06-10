@@ -26,7 +26,7 @@ echo ">>> [1/5] Syncing site files -> $WEBROOT"
 mkdir -p "$WEBROOT" /var/log/caddy
 if command -v rsync >/dev/null; then
 	rsync -a --delete \
-		--exclude='.git' --exclude='deploy' --exclude='README.md' \
+		--exclude='.git' --exclude='.github' --exclude='deploy' --exclude='README.md' \
 		"$REPO_ROOT"/ "$WEBROOT"/
 else
 	cp -rf "$REPO_ROOT"/index.html "$REPO_ROOT"/about.html "$REPO_ROOT"/artists.html \

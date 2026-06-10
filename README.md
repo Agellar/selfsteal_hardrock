@@ -133,6 +133,33 @@ curl -sk --resolve hardrock.legendaryfm.uk:9443:127.0.0.1 \
 Если уже есть Caddy с другими сайтами — не заменяйте весь Caddyfile, а вставьте
 только site-блок из `deploy/Caddyfile`.
 
+## Автодеплой при push (GitHub Actions)
+
+В `.github/workflows/deploy.yml` настроена выкатка на сервер при каждом push в
+`main` (синхронизация по SSH + запуск `deploy/deploy.sh`). Приватный ключ живёт
+в GitHub Secrets и **не попадает в код/переписку**.
+
+Настройка один раз:
+
+1. Создайте **отдельный** deploy-ключ (не основной):
+   ```bash
+   ssh-keygen -t ed25519 -f deploy_key -C "github-deploy" -N ""
+   ```
+2. Публичную часть добавьте на сервер:
+   ```bash
+   cat deploy_key.pub >> /root/.ssh/authorized_keys
+   ```
+3. В GitHub: **Settings → Secrets and variables → Actions** добавьте секреты:
+   - `SSH_HOST` — IP сервера
+   - `SSH_USER` — `root`
+   - `SSH_KEY` — содержимое приватного `deploy_key` (целиком)
+   - `SSH_PORT` — опционально, если порт не 22
+4. Один раз выполните ручной деплой (чтобы появился каталог и Caddyfile), далее
+   каждый push в `main` будет выкатываться автоматически.
+
+> Ключ можно отозвать в любой момент, удалив строку из `authorized_keys` —
+> доступ прекратится сразу, остальная конфигурация не затрагивается.
+
 ## Заметки по selfsteal-маскировке
 
 - **Полная автономность.** Шрифты self-hosted (`assets/fonts/`), внешних
