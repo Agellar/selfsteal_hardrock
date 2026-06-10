@@ -98,6 +98,41 @@ sed -i 's#https://hardrock.legendaryfm.uk#https://НОВЫЙ-ДОМЕН#g' \
   robots.txt sitemap.xml *.html
 ```
 
+## Деплой на сервер (Ubuntu + Caddy за xray Reality)
+
+Готовый деплой-кит лежит в `deploy/`. Сценарий — selfsteal: статический сайт
+отдаётся по **настоящему TLS** на `127.0.0.1:9443`, а xray Reality на `:443`
+указывает на него через `realitySettings.target = "127.0.0.1:9443"`. Весь
+non-Reality трафик (браузеры, активные проберы) попадает на реальный сайт с
+валидным сертификатом — в этом и смысл маскировки.
+
+```bash
+# на сервере
+git clone https://github.com/Agellar/selfsteal_hardrock.git
+cd selfsteal_hardrock
+sudo bash deploy/deploy.sh
+```
+
+Скрипт копирует сайт в `/var/www/hardrock`, ставит `deploy/Caddyfile` в
+`/etc/caddy/Caddyfile` (с бэкапом старого), проверяет конфиг и перезагружает
+Caddy. Обновление сайта — `git pull` и повторный запуск скрипта.
+
+**Важное условие:** для выпуска сертификата Let's Encrypt нужен открытый
+**TCP-порт 80** (HTTP-01 challenge) — TLS-ALPN на 443 невозможен, его занимает
+xray. Скрипт сам откроет 80 в `ufw`, если он активен; в облачной
+security-group откройте порт вручную.
+
+Проверка после деплоя:
+
+```bash
+curl -sk --resolve hardrock.legendaryfm.uk:9443:127.0.0.1 \
+  https://hardrock.legendaryfm.uk:9443/ | head -n1
+# и в браузере: https://hardrock.legendaryfm.uk
+```
+
+Если уже есть Caddy с другими сайтами — не заменяйте весь Caddyfile, а вставьте
+только site-блок из `deploy/Caddyfile`.
+
 ## Заметки по selfsteal-маскировке
 
 - **Полная автономность.** Шрифты self-hosted (`assets/fonts/`), внешних
