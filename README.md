@@ -98,46 +98,71 @@ sed -i 's#https://hardrock.legendaryfm.uk#https://НОВЫЙ-ДОМЕН#g' \
   robots.txt sitemap.xml *.html
 ```
 
-## Деплой на сервер (Ubuntu + Caddy за xray Reality)
+## Деплой на сервер (1 команда, рядом с remnanode)
 
-Готовый деплой-кит лежит в `deploy/`. Сценарий — selfsteal: статический сайт
-отдаётся по **настоящему TLS** на `127.0.0.1:9443`, а xray Reality на `:443`
-указывает на него через `realitySettings.target = "127.0.0.1:9443"`. Весь
-non-Reality трафик (браузеры, активные проберы) попадает на реальный сайт с
-валидным сертификатом — в этом и смысл маскировки.
+Сценарий — selfsteal: статический сайт отдаётся по **настоящему TLS** на
+`127.0.0.1:9443`, а xray Reality на `:443` указывает на него через
+`dest/target = 127.0.0.1:9443`. Весь non-Reality трафик (браузеры, активные
+проберы) попадает на реальный сайт с валидным сертификатом — в этом и смысл
+маскировки.
+
+**Предусловие:** на сервере уже установлен и работает **remnanode** (Docker), а
+DNS-запись домена указывает на этот сервер. Reality-инбаунд (serverName + dest)
+настраивается в панели remnawave — это ваш шаг, установщик его не трогает.
+
+Интерактивная установка в один клик:
 
 ```bash
-# на сервере
 git clone https://github.com/Agellar/selfsteal_hardrock.git
 cd selfsteal_hardrock
-sudo bash deploy/deploy.sh
+sudo bash deploy/install.sh
 ```
 
-Скрипт копирует сайт в `/var/www/hardrock`, ставит `deploy/Caddyfile` в
-`/etc/caddy/Caddyfile` (с бэкапом старого), проверяет конфиг и перезагружает
-Caddy. Обновление сайта — `git pull` и повторный запуск скрипта.
+`deploy/install.sh` спросит домен, порт (по умолчанию `9443`) и e-mail для
+Let's Encrypt, после чего сам:
+
+1. поднимает **Caddy в Docker** (`/opt/caddy`, `docker compose`, как и
+   remnanode) — никакого native-caddy/systemd;
+2. открывает **TCP/80** для ACME-челленджа (HTTP-01) и `ufw allow 80`, если ufw
+   активен;
+3. получает **настоящий сертификат Let's Encrypt** на домен и отдаёт сайт на
+   `127.0.0.1:9443` за proxy_protocol от xray;
+4. заливает шаблон сайта в `/opt/caddy/html` и применяет хардненинг (без
+   SPA-catch-all, стилизованная 404, кэш + security-заголовки, zstd);
+5. дожидается выпуска сертификата и проверяет отдачу.
+
+Полезные флаги:
+
+```bash
+sudo bash deploy/install.sh --dry-run      # сгенерировать и проверить конфиг, ничего не меняя
+sudo bash deploy/install.sh --sync-only    # обновить только файлы сайта (после git pull)
+sudo DOMAIN=example.com ACME_EMAIL=you@example.com bash deploy/install.sh --yes   # без вопросов
+```
 
 **Важное условие:** для выпуска сертификата Let's Encrypt нужен открытый
-**TCP-порт 80** (HTTP-01 challenge) — TLS-ALPN на 443 невозможен, его занимает
-xray. Скрипт сам откроет 80 в `ufw`, если он активен; в облачной
-security-group откройте порт вручную.
+**TCP-порт 80** (HTTP-01) — TLS-ALPN на 443 невозможен, его занимает xray.
+Установщик откроет 80 в `ufw`, но в облачной security-group порт нужно открыть
+вручную.
 
 Проверка после деплоя:
 
 ```bash
-curl -sk --resolve hardrock.legendaryfm.uk:9443:127.0.0.1 \
-  https://hardrock.legendaryfm.uk:9443/ | head -n1
-# и в браузере: https://hardrock.legendaryfm.uk
+# реальный путь: 443 -> xray Reality -> selfsteal fallback
+curl -skI --resolve hardrock.legendaryfm.uk:443:127.0.0.1 https://hardrock.legendaryfm.uk/ | head -n1
+# сертификат должен быть Let's Encrypt, а не self-signed:
+echo | openssl s_client -connect 127.0.0.1:9443 -servername hardrock.legendaryfm.uk 2>/dev/null | openssl x509 -noout -issuer
 ```
 
-Если уже есть Caddy с другими сайтами — не заменяйте весь Caddyfile, а вставьте
-только site-блок из `deploy/Caddyfile`.
+> Повторный запуск официального установщика selfsteal (DigneZzZ) перезапишет
+> `/opt/caddy/Caddyfile` и вернёт SPA-catch-all — после такого reinstall просто
+> запустите `deploy/install.sh` ещё раз, он восстановит хардненинг.
 
 ## Автодеплой при push (GitHub Actions)
 
 В `.github/workflows/deploy.yml` настроена выкатка на сервер при каждом push в
-`main` (синхронизация по SSH + запуск `deploy/deploy.sh`). Приватный ключ живёт
-в GitHub Secrets и **не попадает в код/переписку**.
+`main` (синхронизация по SSH + `deploy/install.sh --sync-only`). Обновляются
+**только файлы сайта** — конфиг Caddy, порты и сертификат не трогаются. Приватный
+ключ живёт в GitHub Secrets и **не попадает в код/переписку**.
 
 Настройка один раз:
 
@@ -154,8 +179,8 @@ curl -sk --resolve hardrock.legendaryfm.uk:9443:127.0.0.1 \
    - `SSH_USER` — `root`
    - `SSH_KEY` — содержимое приватного `deploy_key` (целиком)
    - `SSH_PORT` — опционально, если порт не 22
-4. Один раз выполните ручной деплой (чтобы появился каталог и Caddyfile), далее
-   каждый push в `main` будет выкатываться автоматически.
+4. Один раз выполните полную установку вручную (`sudo bash deploy/install.sh`),
+   далее каждый push в `main` будет обновлять файлы сайта автоматически.
 
 > Ключ можно отозвать в любой момент, удалив строку из `authorized_keys` —
 > доступ прекратится сразу, остальная конфигурация не затрагивается.

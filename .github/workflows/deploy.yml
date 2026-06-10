@@ -1,8 +1,10 @@
 name: Deploy to server
 
 # Push-to-deploy for the Iron Wave Radio selfsteal site.
-# On every push to main, syncs the repo to the server over SSH and runs the
-# deploy script (which copies files to /var/www/hardrock and reloads Caddy).
+# On every push to main, syncs the repo to the server over SSH and refreshes
+# the deployed site files (install.sh --sync-only -> /opt/caddy/html). It only
+# updates content; it never touches Caddy config, ports, or the certificate.
+# Run the full installer once by hand first (deploy/install.sh).
 #
 # Required repository secrets (Settings -> Secrets and variables -> Actions):
 #   SSH_HOST  - server IP/hostname            (e.g. 212.147.246.247)
@@ -53,4 +55,4 @@ jobs:
           rsync -az --delete -e "$SSH" \
             --exclude='.git' \
             ./ "$REMOTE:/opt/selfsteal_hardrock/"
-          $SSH "$REMOTE" 'bash /opt/selfsteal_hardrock/deploy/deploy.sh'
+          $SSH "$REMOTE" 'bash /opt/selfsteal_hardrock/deploy/install.sh --sync-only'
