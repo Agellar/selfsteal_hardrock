@@ -84,17 +84,19 @@ python3 -m http.server 8080
 Открытие через `file://` тоже работает, но рекомендуется HTTP, чтобы корректно
 отрабатывали относительные пути и политика воспроизведения аудио.
 
-### Перед публикацией: замените домен
+### Домен и контакты
 
-В `robots.txt` и `sitemap.xml` используется домен-заглушка `https://example.com`.
-Замените его на свой реальный домен (одной командой):
+Сайт настроен на домен **https://hardrock.legendaryfm.uk/** — он прописан в
+`robots.txt`, `sitemap.xml`, тегах `<link rel="canonical">` и `og:url`.
+Контактный адрес оператора — **info@legendaryfm.uk** (в подвале и в Политике
+конфиденциальности).
+
+Если домен сменится, обновите его одной командой и поправьте canonical-теги:
 
 ```bash
-sed -i 's#https://example.com#https://ВАШ-ДОМЕН#g' robots.txt sitemap.xml
+sed -i 's#https://hardrock.legendaryfm.uk#https://НОВЫЙ-ДОМЕН#g' \
+  robots.txt sitemap.xml *.html
 ```
-
-При желании обновите `<lastmod>` в `sitemap.xml` на актуальную дату и
-скорректируйте `<link rel="canonical">` в `*.html`.
 
 ## Заметки по selfsteal-маскировке
 

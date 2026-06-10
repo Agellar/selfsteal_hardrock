@@ -4,4 +4,4 @@ Allow: /
 # Аудиопотоки и настройки не несут SEO-ценности — но и не закрыты
 # Disallow: (ничего не запрещаем)
 
-Sitemap: https://example.com/sitemap.xml
+Sitemap: https://hardrock.legendaryfm.uk/sitemap.xml
