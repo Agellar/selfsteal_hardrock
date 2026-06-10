@@ -39,6 +39,17 @@ https://hardrock.legendaryfm.uk:9443 {
 		X-Content-Type-Options "nosniff"
 		Referrer-Policy "strict-origin-when-cross-origin"
 		Permissions-Policy "geolocation=(), microphone=(), camera=()"
+		Strict-Transport-Security "max-age=31536000"
+	}
+
+	# Unknown paths return a styled 404 (this is a real multi-page static site,
+	# not a SPA — it must not echo the homepage on every URL).
+	handle_errors {
+		@404 expression {err.status_code} == 404
+		handle @404 {
+			rewrite * /404.html
+			file_server
+		}
 	}
 
 	log {
