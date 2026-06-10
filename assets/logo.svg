@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="512" height="512" role="img" aria-label="Iron Wave Radio">
+  <rect width="36" height="36" fill="#0d0d0d"/>
+  <path d="M18 4 L29 10.5 L29 25.5 L18 32 L7 25.5 L7 10.5 Z" fill="#e63946" opacity="0.15"/>
+  <path d="M18 4 L29 10.5 L29 25.5 L18 32 L7 25.5 L7 10.5 Z" fill="none" stroke="#e63946" stroke-width="1.5"/>
+  <path d="M14 8 L22 8 L16 19 L21 19 L12 30 L15 20 L10 20 Z" fill="#e63946"/>
+</svg>

@@ -14,6 +14,51 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23111'/%3E%3Cpath d='M6 8 L6 24 L10 24 L10 17 L16 17 L16 24 L20 24 L20 8 L16 8 L16 14 L10 14 L10 8 Z' fill='%23e63946'/%3E%3Cpath d='M22 8 L22 24 L26 24 L26 8 Z' fill='%23e63946'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="assets/fonts.css">
   <link rel="stylesheet" href="assets/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": ["RadioStation", "Organization"],
+        "@id": "https://hardrock.legendaryfm.uk/#station",
+        "name": "Iron Wave Radio",
+        "alternateName": "Iron Wave Hard Rock Radio",
+        "url": "https://hardrock.legendaryfm.uk/",
+        "logo": "https://hardrock.legendaryfm.uk/assets/logo.svg",
+        "image": "https://hardrock.legendaryfm.uk/assets/logo.svg",
+        "email": "info@legendaryfm.uk",
+        "description": "Онлайн радиостанция в жанре Hard Rock. 12 живых потоков 24/7 — легенды и новые имена, без рекламы.",
+        "genre": ["Hard Rock", "Heavy Metal", "Classic Rock", "Glam Metal", "Alternative Rock"],
+        "inLanguage": "ru",
+        "areaServed": "Worldwide",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "email": "info@legendaryfm.uk",
+          "contactType": "customer support",
+          "availableLanguage": ["Russian", "English"]
+        }
+      },
+      {
+        "@type": "BroadcastService",
+        "@id": "https://hardrock.legendaryfm.uk/#broadcast",
+        "name": "Iron Wave Radio — Hard Rock 24/7",
+        "broadcastDisplayName": "Iron Wave Radio",
+        "broadcaster": { "@id": "https://hardrock.legendaryfm.uk/#station" },
+        "inLanguage": "ru",
+        "genre": "Hard Rock"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://hardrock.legendaryfm.uk/#website",
+        "url": "https://hardrock.legendaryfm.uk/",
+        "name": "Iron Wave Radio",
+        "description": "Hard Rock онлайн-радио: 12 потоков, история жанра, артисты и поджанры.",
+        "inLanguage": "ru",
+        "publisher": { "@id": "https://hardrock.legendaryfm.uk/#station" }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
